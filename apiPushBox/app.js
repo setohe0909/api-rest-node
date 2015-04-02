@@ -18,6 +18,7 @@ app.use(methodOverride());
 
 // Import Models and controllers
 var models = require('./models/data')(app, mongoose);
+var TVShowCtrl = require('./controllers/tvshows');
 
 var router = express.Router();
 
@@ -26,6 +27,21 @@ router.get('/', function(req, res) {
 });
 app.use(router);
 
+// API routes
+var tvshows = express.Router();
+
+tvshows.route('/tvshows')
+  .get(TVShowCtrl.findAllTVShows)
+  .post(TVShowCtrl.addTVShow);
+
+tvshows.route('/tvshows/:id')
+  .get(TVShowCtrl.findById)
+  .put(TVShowCtrl.updateTVShow)
+  .delete(TVShowCtrl.deleteTVShow);
+
+app.use('/api', tvshows);
+
+//Start Server
 app.listen(3000, function() {
   console.log("Node server running on http://localhost:3000");
 });
